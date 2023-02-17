@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class ProfessorService {
 
-    private List<Professor> professors = new ArrayList<>();
+    private CopyOnWriteArrayList<Professor> professors = new CopyOnWriteArrayList<>();
 
     @PostConstruct
     public void init() {

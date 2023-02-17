@@ -3,9 +3,11 @@ package com.uniovi.sdi2223312spring.controllers;
 import com.uniovi.sdi2223312spring.entities.Professor;
 import com.uniovi.sdi2223312spring.services.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 public class ProfessorController {
 
     @Autowired //Inyectar el servicio
@@ -15,12 +17,18 @@ public class ProfessorController {
     public String setProfessor(@ModelAttribute Professor professor) {
         professor.setId((long) (professorService.getProfessors().size()+1));
         professorService.addProfessor(professor);
-        return "Profesor: " + professor.getNombre() + " " + professor.getApellidos()+ " añadido correctamente";
+        return "redirect:/professor/list";
+    }
+
+    @RequestMapping(value = "/professor/add")
+    public String getProfessor(@ModelAttribute Professor professor) {
+        return "professor/add";
     }
 
     @RequestMapping(value = "/professor/list")
-    public String getProfessors(@ModelAttribute Professor professor) {
-        return professorService.getProfessors().toString();
+    public String getList(Model model) {
+        model.addAttribute("professors", professorService.getProfessors());
+        return "professor/list";
     }
 
     @RequestMapping(value = "/professor/edit", method = RequestMethod.POST)
@@ -37,14 +45,15 @@ public class ProfessorController {
     }
 
     @RequestMapping("/professor/details/{id}")
-    public String getDetail(@PathVariable Long id) {
-        return professorService.getProfessor(id).toString();
+    public String getDetail(Model model,@PathVariable Long id) {
+        model.addAttribute("professor", professorService.getProfessor(id));
+        return "professor/details";
     }
 
     @RequestMapping("/professor/delete/{id}")
     public String deleteProfessor(@PathVariable Long id){
         professorService.deleteProfessor(id);
-        return professorService.getProfessors().toString();
+        return "redirect:/professor/list";
     }
 
 }
