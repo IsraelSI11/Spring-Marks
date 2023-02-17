@@ -12,5 +12,33 @@
     <input type="text" id="score" name="score"/><br>
     <input type="submit" value="Send"/>
 </form>
+
+<form method="post" action="/professor/add">
+    <label for="dniAdd">DNI:</label><br>
+    <input type="text" id="dniAdd" name="dni"/><br>
+    <label for="nombreAdd">Nombre:</label><br>
+    <input type="text" id="nombreAdd" name="nombre"/><br>
+    <label for="apellidosAdd">Apellidos:</label><br>
+    <input type="text" id="apellidosAdd" name="apellidos"/><br>
+    <label for="categoriaAdd">Categoria:</label><br>
+    <input type="text" id="categoriaAdd" name="categoria"/><br>
+    <input type="submit" value="Send"/>
+</form>
+
+<br>
+
+<form method="post" action="/professor/edit">
+    <label for="id">Selecciona el ID del profesor que quieres editar:</label><br>
+    <input type="text" id="id" name="id"/><br>
+    <label for="dni">DNI:</label><br>
+    <input type="text" id="dni" name="dni"/><br>
+    <label for="nombre">Nombre:</label><br>
+    <input type="text" id="nombre" name="nombre"/><br>
+    <label for="apellidos">Apellidos:</label><br>
+    <input type="text" id="apellidos" name="apellidos"/><br>
+    <label for="categoria">Categoria:</label><br>
+    <input type="text" id="categoria" name="categoria"/><br>
+    <input type="submit" value="Send"/>
+</form>
 </body>
 </html>
