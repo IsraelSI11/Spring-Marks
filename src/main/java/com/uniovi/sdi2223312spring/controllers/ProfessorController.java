@@ -31,17 +31,19 @@ public class ProfessorController {
         return "professor/list";
     }
 
+    @RequestMapping(value = "/professor/edit")
+    public String getEdit() {
+        return "professor/edit";
+    }
+
     @RequestMapping(value = "/professor/edit", method = RequestMethod.POST)
-    public String edit(@ModelAttribute Professor professor) {
+    public String setEdit(@ModelAttribute Professor professor) {
         Professor prof=professorService.getProfessor(professor.getId());
         if(prof!=null){
-            prof.setDni(professor.getDni());
-            prof.setNombre(professor.getNombre());
-            prof.setApellidos(professor.getApellidos());
-            prof.setCategoria(professor.getCategoria());
-            return professorService.getProfessors().toString();
+            professorService.addProfessor(professor);
+            return "redirect:/professor/details/"+professor.getId();
         }
-        return "No hay un profesor con ese ID";
+        return "professor/list";
     }
 
     @RequestMapping("/professor/details/{id}")
