@@ -1,9 +1,11 @@
 package com.uniovi.sdi2223312spring.controllers;
 
 import com.uniovi.sdi2223312spring.entities.User;
+import com.uniovi.sdi2223312spring.services.RolesService;
 import com.uniovi.sdi2223312spring.services.SecurityService;
 import com.uniovi.sdi2223312spring.services.UsersService;
 import com.uniovi.sdi2223312spring.validators.SignUpFormValidator;
+import com.uniovi.sdi2223312spring.validators.UserAddValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +29,12 @@ public class UsersController {
     @Autowired
     private SignUpFormValidator signUpFormValidator;
 
+    @Autowired
+    private UserAddValidator userAddValidator;
+
+    @Autowired
+    private RolesService rolesService;
+
     @RequestMapping("/user/list")
     public String getListado(Model model) {
         model.addAttribute("usersList", usersService.getUsers());
@@ -41,12 +49,19 @@ public class UsersController {
 
     @RequestMapping(value = "/user/add")
     public String getUser(Model model) {
-        model.addAttribute("usersList", usersService.getUsers());
+        model.addAttribute("rolesList", rolesService.getRoles());
+        model.addAttribute("user",new User());
         return "user/add";
     }
 
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
-    public String setUser(@ModelAttribute User user) {
+    public String setUser(@ModelAttribute @Validated User user,Model model,BindingResult result) {
+        userAddValidator.validate(user,result);
+        if(result.hasErrors()){
+            model.addAttribute("rolesList", rolesService.getRoles());
+            model.addAttribute("user",user);
+            return "user/add";
+        }
         usersService.addUser(user);
         return "redirect:/user/list";
     }
@@ -84,12 +99,13 @@ public class UsersController {
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signup(@Validated User user, BindingResult result) {
-        signUpFormValidator.validate(user,result);
-        if(result.hasErrors()){
+        signUpFormValidator.validate(user, result);
+        if (result.hasErrors()) {
             return "signup";
         }
+        user.setRole(rolesService.getRoles()[0]);
         usersService.addUser(user);
-        securityService.autoLogin(user.getDni(),user.getPasswordConfirm());
+        securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
         return "redirect:home";
     }
 
