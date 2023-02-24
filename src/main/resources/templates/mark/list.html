@@ -16,10 +16,17 @@
     </form>
     <p>Las notas que actualmente figuran en el sistema son las siguientes:</p>
     <button type="button" id="updateButton" class="btn btn-primary">Actualizar</button>
-    <script>
-        $("#updateButton").click(function () {
-            $("#tableMarks").load('/mark/list/update');
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $( "#updateButton" ).click(function() {
+            let numberPage = [[${param.page}]];
+            let urlUpdate = '/mark/list/update';
+            if (numberPage != null ){
+                urlUpdate += "?page="+numberPage[0];
+            }
+            $("#tableMarks").load(urlUpdate);
         });
+        /*]]>*/
     </script>
     <div class="table-responsive">
         <table class="table table-hover" th:fragment="tableMarks" id="tableMarks">
@@ -46,13 +53,19 @@
                                     class="btn btn-success">Reenviar</button>
                             <script th:inline="javascript">
                                 /*<![CDATA[*/
-                                $( "#resendButton"+ "[[${mark.id}]]").click(function() {
+                                $("#resendButton"+ "[[${mark.id}]]").click(function() {
                                     $.get( "/mark/[[${mark.id}]]/noresend", function( data ) {
-                                        $("#tableMarks").load('/mark/list/update');
+                                        let numberPage = [[${param.page}]];
+                                        let urlUpdate = '/mark/list/update';
+                                        if ( numberPage != null ){
+                                            urlUpdate += "?page="+numberPage[0];
+                                        }
+                                        $("#tableMarks").load(urlUpdate);
                                     });
                                 });
                                 /*]]>*/
                             </script>
+
                         </div>
                         <div th:unless="${mark.resend}">
                             <!--<a th:href="${'/mark/' + mark.id + '/resend'}">No reenviar</a>-->
@@ -60,9 +73,14 @@
                                     class="btn btn-info">No reenviar</button>
                             <script th:inline="javascript">
                                 /*<![CDATA[*/
-                                $( "#noresendButton"+ "[[${mark.id}]]" ).click(function() {
+                                $( "#noresendButton" + "[[${mark.id}]]" ).click(function() {
                                     $.get( "/mark/[[${mark.id}]]/resend", function( data ) {
-                                        $("#tableMarks").load('/mark/list/update');
+                                        var numberPage = [[${param.page}]];
+                                        var urlUpdate = '/mark/list/update';
+                                        if ( numberPage != null ){
+                                            urlUpdate += "?page="+numberPage[0];
+                                        }
+                                        $("#tableMarks").load(urlUpdate);
                                     });
                                 });
                                 /*]]>*/
@@ -78,6 +96,7 @@
     </div>
 
     <div th:if="${#lists.isEmpty(markList)}"> No marks</div>
+    <footer th:replace="fragments/pagination"/>
 </div>
 <footer th:replace="fragments/footer"></footer>
 </body>
