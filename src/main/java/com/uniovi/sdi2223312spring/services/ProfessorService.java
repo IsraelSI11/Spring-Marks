@@ -30,4 +30,8 @@ public class ProfessorService {
         professors.deleteById(id);
     }
 
+    public Professor findProfessorByDni(String dni){
+        return professors.findByDni(dni);
+    }
+
 }
