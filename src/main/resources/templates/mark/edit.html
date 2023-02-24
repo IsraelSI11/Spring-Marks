@@ -33,7 +33,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="score">Puntuación:</label>
             <div class="col-sm-10">
-                <input id="score" th:value="${mark.score}" type="number" class="form-control" name="score"
+                <input id="score" th:value="${mark.score}" type="number" step="any" class="form-control" name="score"
                        placeholder="Entre 0 y 10"
                        required="true"/>
                 <span class="text-danger" th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></span>
