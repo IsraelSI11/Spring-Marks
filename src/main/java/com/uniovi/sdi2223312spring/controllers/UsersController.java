@@ -1,5 +1,6 @@
 package com.uniovi.sdi2223312spring.controllers;
 
+import com.uniovi.sdi2223312spring.entities.Mark;
 import com.uniovi.sdi2223312spring.entities.User;
 import com.uniovi.sdi2223312spring.services.RolesService;
 import com.uniovi.sdi2223312spring.services.SecurityService;
@@ -7,16 +8,18 @@ import com.uniovi.sdi2223312spring.services.UsersService;
 import com.uniovi.sdi2223312spring.validators.SignUpFormValidator;
 import com.uniovi.sdi2223312spring.validators.UserAddValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedList;
 
 @Controller
 public class UsersController {
@@ -36,8 +39,14 @@ public class UsersController {
     private RolesService rolesService;
 
     @RequestMapping("/user/list")
-    public String getListado(Model model) {
-        model.addAttribute("usersList", usersService.getUsers());
+    public String getListado(Model model, Pageable pageable, @RequestParam(value = "", required = false) String searchText) {
+        Page<User> users = new PageImpl<User>(new LinkedList<User>());
+        if(searchText!=null && !searchText.isEmpty()){
+            users = usersService.searchUserByNameOrSurname(pageable,searchText);
+        }else{
+            users = new PageImpl<User>( usersService.getUsers());
+        }
+        model.addAttribute("usersList",users);
         return "user/list";
     }
 

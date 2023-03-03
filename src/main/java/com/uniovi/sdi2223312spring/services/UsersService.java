@@ -1,13 +1,18 @@
 package com.uniovi.sdi2223312spring.services;
 
+import com.uniovi.sdi2223312spring.entities.Mark;
 import com.uniovi.sdi2223312spring.entities.User;
 import com.uniovi.sdi2223312spring.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -44,6 +49,13 @@ public class UsersService {
 
     public void deleteUser(Long id) {
         usersRepository.deleteById(id);
+    }
+
+    public Page<User> searchUserByNameOrSurname(Pageable pageable, String searchText) {
+        Page<User> users = new PageImpl<User>(new LinkedList<User>());
+        searchText = "%"+searchText+"%";
+        users = usersRepository.searchUserByNameOrSurname(pageable,searchText);
+        return users;
     }
 
 }
