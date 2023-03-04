@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.HashSet;
@@ -57,7 +59,7 @@ public class MarksController {
         User user = usersService.getUserByDni(dni);
         Page<Mark> marks = marksService.getMarksForUser(pageable,user);
         model.addAttribute("markList", marks.getContent());
-        return "mark/list :: tableMarks";
+        return "fragments/markList";
     }
 
     @RequestMapping(value="/mark/add")
@@ -86,9 +88,10 @@ public class MarksController {
     }
 
     @RequestMapping("/mark/delete/{id}")
-    public String deleteMark(@PathVariable Long id){
+    public String deleteMark(@PathVariable Long id, HttpServletRequest request){
         marksService.deleteMark(id);
-        return "redirect:/mark/list";
+        String test = request.getRequestURI();
+        return "redirect:"+test+" :: tableMarks";
     }
 
     @RequestMapping(value = "/mark/edit/{id}")
