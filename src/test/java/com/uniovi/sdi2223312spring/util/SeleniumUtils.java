@@ -46,7 +46,7 @@ public class SeleniumUtils {
 	static public void waitTextIsNotPresentOnPage(WebDriver driver, String text, int timeout)
 	{
 		Boolean resultado = 
-				(new WebDriverWait(driver, Duration.ofSeconds(timeout))).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(text(),'" + text + "')]")));
+				(new WebDriverWait(driver, timeout)).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(text(),'" + text + "')]")));
 
 		Assertions.assertTrue(resultado);
 	}
@@ -62,7 +62,7 @@ public class SeleniumUtils {
 	static public List<WebElement> waitLoadElementsByXpath(WebDriver driver, String xpath, int timeout)
 	{
 		WebElement result =
-				(new WebDriverWait(driver, Duration.ofSeconds(timeout))).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+				(new WebDriverWait(driver, timeout)).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
 		Assertions.assertNotNull(result);
 		return driver.findElements(By.xpath(xpath));
 	}
